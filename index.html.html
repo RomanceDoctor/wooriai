@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리AI — AI 프롬프트 마켓</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0f;
+  --bg2: #141418;
+  --bg3: #1c1c22;
+  --bg4: #242430;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8e6df;
+  --text2: #9a9890;
+  --text3: #555450;
+  --gold: #c8a96e;
+  --gold2: #e8c88a;
+  --teal: #3ecfb0;
+  --coral: #ff6b5e;
+  --green: #5ecf7a;
+  --orange: #ff9f40;
+  --purple: #9b7fe8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; min-height: 100vh; }
+
+/* NAV */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: rgba(12,12,15,0.92);
+  backdrop-filter: blur(12px); z-index: 100;
+}
+.logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.08em; color: var(--text); }
+.logo span { color: var(--gold); }
+.nav-links { display: flex; gap: 28px; font-size: 13px; color: var(--text2); }
+.nav-links a { color: var(--text2); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+.nav-links a:hover { color: var(--text); }
+.nav-btn {
+  padding: 8px 20px; background: var(--gold); color: #1a1200;
+  border: none; border-radius: 6px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: opacity 0.2s;
+}
+.nav-btn:hover { opacity: 0.85; }
+
+/* HERO */
+.hero {
+  padding: 80px 48px 60px; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -120px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(200,169,110,0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold);
+  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px;
+}
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 8vw, 86px);
+  line-height: 0.95; letter-spacing: 0.03em; margin-bottom: 20px;
+}
+.hero-title span { color: var(--gold); }
+.hero-sub {
+  font-size: 15px; color: var(--text2); max-width: 520px; margin: 0 auto 36px;
+  line-height: 1.8;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px; background: rgba(200,169,110,0.1);
+  border: 1px solid rgba(200,169,110,0.25); border-radius: 99px;
+  font-size: 12px; color: var(--gold); margin-bottom: 36px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-primary {
+  padding: 14px 32px; background: var(--gold); color: #1a1200;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-outline {
+  padding: 14px 32px; background: transparent; color: var(--text);
+  border: 1px solid var(--border2); border-radius: 8px; font-size: 14px;
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: border-color 0.2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+/* STATS */
+.stats {
+  display: flex; justify-content: center; gap: 60px;
+  padding: 32px 48px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--gold);
+  letter-spacing: 0.05em; line-height: 1;
+}
+.stat-label { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex; gap: 8px; align-items: center;
+  padding: 20px 48px; overflow-x: auto; scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-label { font-size: 12px; color: var(--text3); white-space: nowrap; margin-right: 4px; font-family: 'JetBrains Mono', monospace; }
+.filter-btn {
+  padding: 6px 14px; border-radius: 99px; font-size: 12px; border: 1px solid var(--border);
+  background: transparent; color: var(--text2); cursor: pointer; white-space: nowrap;
+  font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(200,169,110,0.08); }
+
+/* GRID */
+.section { padding: 32px 48px 80px; }
+.section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; }
+.section-title span { color: var(--gold); }
+.section-count { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+.prompt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+/* PROMPT CARD */
+.prompt-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; transition: all 0.25s; cursor: pointer;
+}
+.prompt-card:hover { border-color: var(--border2); transform: translateY(-3px); }
+.prompt-card.featured { border-color: rgba(200,169,110,0.3); }
+.prompt-card.featured:hover { border-color: var(--gold); }
+
+.card-top { padding: 18px 18px 14px; }
+.card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.card-target {
+  font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  padding: 3px 8px; border-radius: 99px; font-weight: 500;
+}
+.target-fnd { background: rgba(200,169,110,0.15); color: var(--gold); }
+.target-smb { background: rgba(62,207,176,0.15); color: var(--teal); }
+.target-emp { background: rgba(74,158,255,0.15); color: #4a9eff; }
+.target-mkr { background: rgba(255,107,94,0.15); color: var(--coral); }
+.target-sol { background: rgba(155,127,232,0.15); color: var(--purple); }
+
+.card-badge {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 10px; color: var(--gold); font-family: 'JetBrains Mono', monospace;
+}
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+
+.card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+.card-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.card-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px;
+  background: var(--bg3); color: var(--text3); font-family: 'JetBrains Mono', monospace;
+}
+
+.card-bottom {
+  padding: 12px 18px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.price-wrap { display: flex; align-items: baseline; gap: 6px; }
+.price-original { font-size: 11px; color: var(--text3); text-decoration: line-through; font-family: 'JetBrains Mono', monospace; }
+.price { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--gold); letter-spacing: 0.05em; }
+.price-tier { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+.sales-count { font-size: 11px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+.sales-bar { width: 48px; height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.sales-fill { height: 100%; background: var(--teal); border-radius: 2px; transition: width 0.5s; }
+
+/* BUNDLE */
+.bundle-section { padding: 0 48px 80px; }
+.bundle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.bundle-card {
+  background: linear-gradient(135deg, rgba(200,169,110,0.07), rgba(200,169,110,0.02));
+  border: 1px solid rgba(200,169,110,0.2); border-radius: 12px; padding: 22px;
+  transition: border-color 0.2s; cursor: pointer;
+}
+.bundle-card:hover { border-color: rgba(200,169,110,0.5); }
+.bundle-tier { font-size: 10px; color: var(--teal); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; margin-bottom: 6px; }
+.bundle-name { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.bundle-items { margin-bottom: 14px; }
+.bundle-item { font-size: 12px; color: var(--text2); padding: 3px 0; display: flex; align-items: center; gap: 6px; }
+.bundle-item::before { content: '·'; color: var(--teal); font-size: 16px; }
+.bundle-price-row { display: flex; align-items: baseline; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; }
+.bundle-orig { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text3); text-decoration: line-through; }
+.bundle-price { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--gold); letter-spacing: 0.05em; }
+.bundle-disc { font-size: 11px; padding: 2px 8px; background: rgba(62,207,176,0.12); color: var(--teal); border-radius: 99px; }
+.bundle-cond { font-size: 10px; color: var(--text3); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+/* SELLER CTA */
+.seller-cta {
+  margin: 0 48px 80px; padding: 40px; border-radius: 16px;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  position: relative; overflow: hidden;
+}
+.seller-cta::before {
+  content: ''; position: absolute; right: -80px; top: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(62,207,176,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.seller-cta-text { flex: 1; }
+.seller-cta-label { font-size: 11px; color: var(--teal); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.15em; margin-bottom: 10px; }
+.seller-cta-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.04em; margin-bottom: 10px; }
+.seller-cta-title span { color: var(--teal); }
+.seller-cta-desc { font-size: 13px; color: var(--text2); line-height: 1.7; max-width: 480px; }
+.seller-steps { display: flex; flex-direction: column; gap: 10px; min-width: 220px; }
+.seller-step { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text2); }
+.step-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(62,207,176,0.15); color: var(--teal); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* FOOTER */
+footer {
+  padding: 32px 48px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--text3);
+}
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--text3); letter-spacing: 0.08em; }
+.footer-logo span { color: var(--gold); opacity: 0.5; }
+
+/* MODAL */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  display: none; align-items: center; justify-content: center; z-index: 200;
+  padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 16px; max-width: 560px; width: 100%; max-height: 80vh; overflow-y: auto;
+}
+.modal-header { padding: 24px 24px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+.modal-close { background: none; border: none; color: var(--text3); font-size: 20px; cursor: pointer; padding: 4px; line-height: 1; }
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 20px 24px 28px; }
+.modal-target { margin-bottom: 8px; }
+.modal-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+.modal-desc { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 20px; }
+.modal-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+.modal-price { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--gold); letter-spacing: 0.05em; }
+.modal-dynamic { font-size: 11px; color: var(--teal); font-family: 'JetBrains Mono', monospace; padding: 3px 8px; background: rgba(62,207,176,0.1); border-radius: 99px; }
+.modal-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.modal-feature { font-size: 13px; color: var(--text2); display: flex; align-items: flex-start; gap: 8px; }
+.modal-feature::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+.modal-buy {
+  width: 100%; padding: 14px; background: var(--gold); color: #1a1200;
+  border: none; border-radius: 8px; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.modal-buy:hover { opacity: 0.88; }
+.modal-notice { font-size: 11px; color: var(--text3); text-align: center; margin-top: 10px; font-family: 'JetBrains Mono', monospace; }
+
+@media (max-width: 768px) {
+  nav, .section, .bundle-section, .filter-bar { padding-left: 20px; padding-right: 20px; }
+  .hero { padding: 60px 20px 40px; }
+  .stats { gap: 24px; padding: 20px; flex-wrap: wrap; justify-content: center; }
+  .seller-cta { flex-direction: column; margin: 0 20px 60px; }
+  footer { flex-direction: column; gap: 12px; padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">우리<span>AI</span></div>
+  <div class="nav-links">
+    <a>마켓</a>
+    <a>번들</a>
+    <a>셀러 되기</a>
+    <a>소개</a>
+  </div>
+  <button class="nav-btn" onclick="openModal(prompts[0])">셀러 신청</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">행동경제학 박사 큐레이션 AI 마켓</div>
+  <h1 class="hero-title">모두가 함께 만드는<br><span>우리의</span> AI 마켓</h1>
+  <p class="hero-sub">현장 전문가가 직접 만들고, 행동경제학 박사가 심사한 프롬프트만 팝니다. 우리가 함께 만들어가는 AI 마켓입니다.</p>
+  <div class="hero-badge">
+    <span>✦</span> 모두가 만들어가는 우리의 AI 마켓 · woori-ai.com
+  </div>
+  <div class="hero-cta">
+    <button class="btn-primary">프롬프트 둘러보기</button>
+    <button class="btn-outline">셀러로 참여하기</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div style="text-align:center">
+    <div class="stat-num" id="stat-prompts">6</div>
+    <div class="stat-label">승인된 프롬프트</div>
+  </div>
+  <div style="text-align:center">
+    <div class="stat-num">5</div>
+    <div class="stat-label">도메인 카테고리</div>
+  </div>
+  <div style="text-align:center">
+    <div class="stat-num">$4.99~</div>
+    <div class="stat-label">최저 가격</div>
+  </div>
+  <div style="text-align:center">
+    <div class="stat-num">1일</div>
+    <div class="stat-label">평균 심사 기간</div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">필터:</span>
+  <button class="filter-btn active" onclick="filterCards('all', this)">전체</button>
+  <button class="filter-btn" onclick="filterCards('FND', this)">창업자</button>
+  <button class="filter-btn" onclick="filterCards('SMB', this)">소상공인</button>
+  <button class="filter-btn" onclick="filterCards('EMP', this)">직장인</button>
+  <button class="filter-btn" onclick="filterCards('MKR', this)">마케터</button>
+  <button class="filter-btn" onclick="filterCards('SOL', this)">1인창업자</button>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">승인된 <span>프롬프트</span></div>
+    <div class="section-count" id="count-label">6개</div>
+  </div>
+  <div class="prompt-grid" id="prompt-grid"></div>
+</div>
+
+<div class="bundle-section">
+  <div class="section-header">
+    <div class="section-title">번들 <span>패키지</span></div>
+    <div class="section-count">25건 판매 달성 후 활성화</div>
+  </div>
+  <div class="bundle-grid">
+    <div class="bundle-card">
+      <div class="bundle-tier">FND STARTER BUNDLE</div>
+      <div class="bundle-name">Idea Validation Pack</div>
+      <div class="bundle-items">
+        <div class="bundle-item">False Promises Detector</div>
+        <div class="bundle-item">Bad Bedfellows Detector</div>
+      </div>
+      <div class="bundle-price-row">
+        <span class="bundle-orig">$9.98</span>
+        <span class="bundle-price">$7.99</span>
+        <span class="bundle-disc">20% 할인</span>
+      </div>
+      <div class="bundle-cond">* 25건 판매 달성 후 활성화</div>
+    </div>
+    <div class="bundle-card">
+      <div class="bundle-tier">SMB LAUNCH BUNDLE</div>
+      <div class="bundle-name">Shop Launch Pack</div>
+      <div class="bundle-items">
+        <div class="bundle-item">Local Business Growth Analyzer</div>
+        <div class="bundle-item">Pricing Bias Detector</div>
+      </div>
+      <div class="bundle-price-row">
+        <span class="bundle-orig">$9.98</span>
+        <span class="bundle-price">$7.99</span>
+        <span class="bundle-disc">20% 할인</span>
+      </div>
+      <div class="bundle-cond">* 25건 판매 달성 후 활성화</div>
+    </div>
+    <div class="bundle-card">
+      <div class="bundle-tier">FULL FOUNDER PACK</div>
+      <div class="bundle-name">Full Founder Defense Pack</div>
+      <div class="bundle-items">
+        <div class="bundle-item">FND 여정 5개 프롬프트 전체</div>
+        <div class="bundle-item">단계별 사용 가이드 포함</div>
+      </div>
+      <div class="bundle-price-row">
+        <span class="bundle-orig">$24.95</span>
+        <span class="bundle-price">$17.99</span>
+        <span class="bundle-disc">28% 할인</span>
+      </div>
+      <div class="bundle-cond">* 25건 판매 달성 후 활성화</div>
+    </div>
+  </div>
+</div>
+
+<div class="seller-cta">
+  <div class="seller-cta-text">
+    <div class="seller-cta-label">SELLER PROGRAM · 1기 모집중</div>
+    <div class="seller-cta-title">당신의 전문성이<br><span>우리 마켓</span>이 됩니다</div>
+    <p class="seller-cta-desc">의사, 변호사, 회계사, 교육자 — 어떤 분야든 환영합니다. LLM 활용법을 배우고, 도메인 지식으로 프롬프트를 만들어 마켓에서 파세요. 1기 10명 한정.</p>
+  </div>
+  <div class="seller-steps">
+    <div class="seller-step"><span class="step-num">1</span>LLM 기초 교육 (4주)</div>
+    <div class="seller-step"><span class="step-num">2</span>프롬프트 제작 + 심사</div>
+    <div class="seller-step"><span class="step-num">3</span>마켓 입점 + 판매 시작</div>
+    <div style="margin-top:8px">
+      <button class="btn-primary" style="width:100%">셀러 신청하기</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">우리<span>AI</span></div>
+  <div>행동경제학 박사 큐레이션 · 한국어 AI 프롬프트 마켓 · woori-ai.com</div>
+  <div>© 2026 우리AI · 낭만닥터 진사부</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const prompts = [
+  {
+    id: 'pb004', target: 'FND', targetLabel: '창업자',
+    title: 'False Promises Detector',
+    desc: '사업 계획서 속 근거 없는 확신과 확증편향을 3분 만에 진단합니다. 투자자도 못 잡아내는 False Promises 패턴을 선제 제거하세요.',
+    tags: ['행동경제학', 'False Promises', '창업자', '아이젠만'],
+    sales: 12, maxSales: 25, price: 4.99, featured: true,
+    features: ['변수 4개로 내 상황에 맞게 커스터마이징', '예시 출력 4개 포함', '즉시 복붙해서 사용 가능', 'False Promises 패턴 3가지 진단']
+  },
+  {
+    id: 'pb005', target: 'FND', targetLabel: '창업자',
+    title: 'Bad Bedfellows Detector For Founders',
+    desc: '공동창업자·파트너 선택의 후광효과와 사회적증거 편향을 계약 전에 진단합니다. 지분 분쟁을 사전에 방지하세요.',
+    tags: ['Bad Bedfellows', '파트너십', '창업자', '팀 구성'],
+    sales: 3, maxSales: 25, price: 2.99, featured: false,
+    features: ['파트너 선택 편향 5가지 체크', '역할 명확성 진단 포함', '계약 전 필수 체크리스트 생성', '즉시 실전 활용 가능']
+  },
+  {
+    id: 'pb002', target: 'SMB', targetLabel: '소상공인',
+    title: 'Local Business Growth Analyzer',
+    desc: '옆 가게는 왜 항상 더 바쁠까요? 위치도 가격도 아닙니다. 당신이 보지 못한 진짜 이유를 행동경제학으로 분석합니다.',
+    tags: ['소상공인', '상권분석', '마케팅', '사회적증거'],
+    sales: 8, maxSales: 25, price: 4.99, featured: true,
+    features: ['상권·경쟁 편향 진단', '즉시 실행 가능한 액션 아이템', '경쟁점 분석 프레임워크', '변수 4개 맞춤 설정']
+  },
+  {
+    id: 'pb006', target: 'SMB', targetLabel: '소상공인',
+    title: 'Pricing Bias Detector For Small Business',
+    desc: '50% 할인 행사를 했는데 왜 돈이 더 안 남을까요? 가격 설정 속 손실회피 편향을 진단하고 올바른 가격을 찾습니다.',
+    tags: ['가격결정', '손실회피', '소상공인', '마진'],
+    sales: 2, maxSales: 25, price: 2.99, featured: false,
+    features: ['가격 편향 3가지 진단', '마진 최적화 제안', '프로모션 전략 재설계', '즉시 실전 적용 가능']
+  },
+  {
+    id: 'pb003', target: 'EMP', targetLabel: '직장인',
+    title: 'Weekly Planning Failure Detector',
+    desc: '일요일 밤 완벽한 계획, 금요일엔 절반도 못 한 분들. 계획오류 편향이 처음부터 실패를 설계한 겁니다.',
+    tags: ['계획오류', '생산성', '직장인', '시간관리'],
+    sales: 15, maxSales: 25, price: 4.99, featured: true,
+    features: ['계획오류 패턴 자동 진단', '현실적 주간계획 재설계', '우선순위 재배치 가이드', '내일 당장 실행 가능']
+  },
+  {
+    id: 'pb001', target: 'FND', targetLabel: '창업자',
+    title: 'Smarter Startup Plan',
+    desc: '창업 계획서의 인지 편향을 다각도로 진단합니다. 열정은 유지하되, 근거 없는 낙관을 제거하세요.',
+    tags: ['창업', '비즈니스플랜', '편향진단', '복합편향'],
+    sales: 5, maxSales: 25, price: 4.99, featured: false,
+    features: ['복합 편향 진단 (MIX)', '사업계획 교정 출력', '투자자 관점 체크', '즉시 실전 사용 가능']
+  }
+];
+
+function getDynamicPrice(p) {
+  if (p.sales >= 25) return { price: (p.price + 2).toFixed(2), tier: '프리미엄', orig: p.price.toFixed(2) };
+  if (p.sales >= 6) return { price: p.price.toFixed(2), tier: '검증가', orig: null };
+  return { price: '2.99', tier: '입문가', orig: null };
+}
+
+function getSalesFill(sales, max) {
+  return Math.min(Math.round((sales / max) * 100), 100);
+}
+
+function getTargetClass(t) {
+  const map = { FND: 'target-fnd', SMB: 'target-smb', EMP: 'target-emp', MKR: 'target-mkr', SOL: 'target-sol' };
+  return map[t] || 'target-fnd';
+}
+
+function renderCards(data) {
+  const grid = document.getElementById('prompt-grid');
+  document.getElementById('count-label').textContent = data.length + '개';
+  grid.innerHTML = data.map(p => {
+    const dyn = getDynamicPrice(p);
+    const fill = getSalesFill(p.sales, p.maxSales);
+    return `
+    <div class="prompt-card ${p.featured ? 'featured' : ''}" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+      <div class="card-top">
+        <div class="card-meta">
+          <span class="card-target ${getTargetClass(p.target)}">${p.targetLabel}</span>
+          ${p.featured ? '<span class="card-badge"><span class="badge-dot"></span>큐레이터 선정</span>' : ''}
+        </div>
+        <div class="card-title">${p.title}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-tags">${p.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="card-bottom">
+        <div>
+          <div class="price-wrap">
+            ${dyn.orig ? `<span class="price-original">$${dyn.orig}</span>` : ''}
+            <span class="price">$${dyn.price}</span>
+          </div>
+          <div class="price-tier">${dyn.tier} · 판매 ${p.sales}건</div>
+          <div class="sales-bar"><div class="sales-fill" style="width:${fill}%"></div></div>
+        </div>
+        <div class="sales-count" style="text-align:right">
+          ${25 - p.sales}건 후<br>가격 상승
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterCards(target, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = target === 'all' ? prompts : prompts.filter(p => p.target === target);
+  renderCards(filtered);
+}
+
+function openModal(p) {
+  if (typeof p === 'string') p = JSON.parse(p);
+  const dyn = getDynamicPrice(p);
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-target"><span class="card-target ${getTargetClass(p.target)}">${p.targetLabel}</span></div>
+    <div class="modal-title">${p.title}</div>
+    <div class="modal-desc">${p.desc}</div>
+    <div class="modal-price-row">
+      <span class="modal-price">$${dyn.price}</span>
+      <span class="modal-dynamic">판매 ${p.sales}건 · ${dyn.tier}</span>
+    </div>
+    <div class="modal-features">
+      ${p.features.map(f => `<div class="modal-feature">${f}</div>`).join('')}
+    </div>
+    <button class="modal-buy" onclick="alert('MVP 준비중입니다. 곧 토스페이 결제가 연동됩니다!')">
+      $${dyn.price}에 구매하기
+    </button>
+    <div class="modal-notice">구매 후 이메일로 즉시 전달 · 30일 내 환불 보장</div>
+  `;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
+function closeModalBg(e) { if (e.target === document.getElementById('modal-bg')) closeModal(); }
+
+renderCards(prompts);
+</script>
+</body>
+</html>
