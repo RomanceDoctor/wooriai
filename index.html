@@ -269,24 +269,58 @@ footer {
 <nav>
   <div class="logo">우리<span>AI</span></div>
   <div class="nav-links">
-    <a>마켓</a>
-    <a>번들</a>
-    <a>셀러 되기</a>
-    <a>소개</a>
+    <a onclick="scrollToSection('market')">마켓</a>
+    <a onclick="scrollToSection('bundle')">번들</a>
+    <a onclick="showGenerator()">프롬프트 생성기 <span style="font-size:10px;background:rgba(62,207,176,0.15);color:var(--teal);padding:2px 6px;border-radius:99px;margin-left:4px;">7월 오픈</span></a>
+    <a onclick="scrollToSection('seller')">셀러 되기</a>
   </div>
-  <button class="nav-btn" onclick="openModal(prompts[0])">셀러 신청</button>
+  <button class="nav-btn" onclick="scrollToSection('seller')">셀러 신청</button>
 </nav>
+
+<!-- 생성기 준비중 모달 -->
+<div class="modal-bg" id="generator-modal" onclick="closeGeneratorModal(event)">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <div></div>
+      <button class="modal-close" onclick="document.getElementById('generator-modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:32px 28px;">
+      <div style="font-size:48px;margin-bottom:16px;">⚙️</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.04em;margin-bottom:10px;">프롬프트 <span style="color:var(--teal)">생성기</span></div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:24px;">
+        도메인 지식만 있으면 됩니다.<br>
+        LLM 몰라도, 코딩 몰라도 괜찮습니다.<br>
+        <strong style="color:var(--text)">분야 + 타겟 + 문제 상황</strong>만 입력하면<br>
+        진사부님의 4단계 구조로 프롬프트가 자동 완성됩니다.
+      </div>
+      <div style="background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:24px;text-align:left;">
+        <div style="font-size:11px;color:var(--teal);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;margin-bottom:10px;">생성기 사용 셀러 조건</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8;">
+          ✓ 30년 경력 의사, 변호사, 회계사, 교육자 환영<br>
+          ✓ 은퇴 전문가, 시니어 도메인 전문가 환영<br>
+          ✓ 판매 수익의 50% 수수료 (생성기 도구 사용료)<br>
+          ✓ 심사 통과 즉시 마켓 입점
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:20px;">2026년 7월 오픈 예정</div>
+      <button class="modal-buy" style="background:var(--teal);color:#001a14;" onclick="document.getElementById('generator-modal').classList.remove('open')">
+        사전 알림 신청하기
+      </button>
+      <div class="modal-notice" style="margin-top:10px;">오픈 시 이메일로 먼저 알려드립니다</div>
+    </div>
+  </div>
+</div>
 
 <div class="hero">
   <div class="hero-label">행동경제학 박사 큐레이션 AI 마켓</div>
   <h1 class="hero-title">모두가 함께 만드는<br><span>우리의</span> AI 마켓</h1>
-  <p class="hero-sub">현장 전문가가 직접 만들고, 행동경제학 박사가 심사한 프롬프트만 팝니다. 우리가 함께 만들어가는 AI 마켓입니다.</p>
+  <p class="hero-sub">열심히 했는데 왜 결과가 없을까요? 감이 아닌 근거로 판단하고 싶은 분들을 위한 AI 프롬프트 마켓입니다.</p>
   <div class="hero-badge">
     <span>✦</span> 모두가 만들어가는 우리의 AI 마켓 · woori-ai.com
   </div>
   <div class="hero-cta">
-    <button class="btn-primary">프롬프트 둘러보기</button>
-    <button class="btn-outline">셀러로 참여하기</button>
+    <button class="btn-primary" onclick="scrollToSection('market')">프롬프트 둘러보기</button>
+    <button class="btn-outline" onclick="showGenerator()">생성기로 셀러 되기</button>
   </div>
 </div>
 
@@ -319,7 +353,7 @@ footer {
   <button class="filter-btn" onclick="filterCards('SOL', this)">1인창업자</button>
 </div>
 
-<div class="section">
+<div class="section" id="market">
   <div class="section-header">
     <div class="section-title">승인된 <span>프롬프트</span></div>
     <div class="section-count" id="count-label">6개</div>
@@ -327,7 +361,7 @@ footer {
   <div class="prompt-grid" id="prompt-grid"></div>
 </div>
 
-<div class="bundle-section">
+<div class="bundle-section" id="bundle">
   <div class="section-header">
     <div class="section-title">번들 <span>패키지</span></div>
     <div class="section-count">25건 판매 달성 후 활성화</div>
@@ -378,11 +412,11 @@ footer {
   </div>
 </div>
 
-<div class="seller-cta">
+<div class="seller-cta" id="seller">
   <div class="seller-cta-text">
     <div class="seller-cta-label">SELLER PROGRAM · 1기 모집중</div>
     <div class="seller-cta-title">당신의 전문성이<br><span>우리 마켓</span>이 됩니다</div>
-    <p class="seller-cta-desc">의사, 변호사, 회계사, 교육자 — 어떤 분야든 환영합니다. LLM 활용법을 배우고, 도메인 지식으로 프롬프트를 만들어 마켓에서 파세요. 1기 10명 한정.</p>
+    <p class="seller-cta-desc">의사, 변호사, 회계사, 교육자 — 어떤 분야든 환영합니다. "내가 이걸 AI로 만들 수 있을까?" 싶은 분들, 4주면 됩니다. 도메인 지식은 있는데 어떻게 팔지 모르는 분들을 위한 프로그램입니다. 1기 10명 한정.</p>
   </div>
   <div class="seller-steps">
     <div class="seller-step"><span class="step-num">1</span>LLM 기초 교육 (4주)</div>
@@ -417,49 +451,49 @@ const prompts = [
     id: 'pb004', target: 'FND', targetLabel: '창업자',
     title: 'False Promises Detector',
     desc: '사업 계획서 속 근거 없는 확신과 확증편향을 3분 만에 진단합니다. 투자자도 못 잡아내는 False Promises 패턴을 선제 제거하세요.',
-    tags: ['행동경제학', 'False Promises', '창업자', '아이젠만'],
+    tags: ['창업자', '사업계획', '투자유치', '아이디어검증'],
     sales: 12, maxSales: 25, price: 4.99, featured: true,
-    features: ['변수 4개로 내 상황에 맞게 커스터마이징', '예시 출력 4개 포함', '즉시 복붙해서 사용 가능', 'False Promises 패턴 3가지 진단']
+    features: ['"이거 분명히 팔릴 거야"라는 확신, 근거가 있는지 3분 안에 확인', '투자자가 묻기 전에 내가 먼저 약점을 발견', '감이 아닌 근거로 만든 사업계획서 완성', '지금 당장 복붙해서 쓸 수 있는 결과물']
   },
   {
     id: 'pb005', target: 'FND', targetLabel: '창업자',
     title: 'Bad Bedfellows Detector For Founders',
-    desc: '공동창업자·파트너 선택의 후광효과와 사회적증거 편향을 계약 전에 진단합니다. 지분 분쟁을 사전에 방지하세요.',
-    tags: ['Bad Bedfellows', '파트너십', '창업자', '팀 구성'],
+    desc: '좋은 사람이라서 함께 시작했다가 1년 후 지분 분쟁으로 회사가 쪼개지는 경우, 주변에서 보셨죠? 계약 전에 먼저 확인하세요.',
+    tags: ['공동창업자', '파트너십', '팀구성', '지분설계'],
     sales: 3, maxSales: 25, price: 2.99, featured: false,
-    features: ['파트너 선택 편향 5가지 체크', '역할 명확성 진단 포함', '계약 전 필수 체크리스트 생성', '즉시 실전 활용 가능']
+    features: ['계약 전 반드시 확인해야 할 파트너 체크리스트', '역할과 책임이 불명확할 때 생기는 문제 사전 진단', '"좋은 사람"과 "좋은 파트너"는 다릅니다', '즉시 실전 활용 가능']
   },
   {
     id: 'pb002', target: 'SMB', targetLabel: '소상공인',
     title: 'Local Business Growth Analyzer',
-    desc: '옆 가게는 왜 항상 더 바쁠까요? 위치도 가격도 아닙니다. 당신이 보지 못한 진짜 이유를 행동경제학으로 분석합니다.',
-    tags: ['소상공인', '상권분석', '마케팅', '사회적증거'],
+    desc: '옆 가게는 왜 항상 더 바쁠까요? 위치도 가격도 친절함도 아닙니다. 당신이 보지 못한 진짜 이유를 찾아드립니다.',
+    tags: ['소상공인', '상권분석', '경쟁점분석', '매출향상'],
     sales: 8, maxSales: 25, price: 4.99, featured: true,
-    features: ['상권·경쟁 편향 진단', '즉시 실행 가능한 액션 아이템', '경쟁점 분석 프레임워크', '변수 4개 맞춤 설정']
+    features: ['옆 가게가 더 잘되는 진짜 이유 분석', '지금 당장 바꿀 수 있는 액션 아이템', '감이 아닌 근거로 만드는 경쟁 전략', '내 가게 상황에 맞게 커스터마이징']
   },
   {
     id: 'pb006', target: 'SMB', targetLabel: '소상공인',
     title: 'Pricing Bias Detector For Small Business',
-    desc: '50% 할인 행사를 했는데 왜 돈이 더 안 남을까요? 가격 설정 속 손실회피 편향을 진단하고 올바른 가격을 찾습니다.',
-    tags: ['가격결정', '손실회피', '소상공인', '마진'],
+    desc: '50% 할인 행사를 했는데 왜 돈이 더 안 남을까요? 가격을 올리면 손님이 떠날까봐 두려운 분들, 먼저 확인해보세요.',
+    tags: ['가격설정', '소상공인', '마진관리', '할인전략'],
     sales: 2, maxSales: 25, price: 2.99, featured: false,
-    features: ['가격 편향 3가지 진단', '마진 최적화 제안', '프로모션 전략 재설계', '즉시 실전 적용 가능']
+    features: ['내 가격 설정이 왜 손해인지 진단', '손님을 잃지 않고 가격 올리는 방법', '할인이 오히려 독이 되는 경우 사전 발견', '즉시 실전 적용 가능']
   },
   {
     id: 'pb003', target: 'EMP', targetLabel: '직장인',
     title: 'Weekly Planning Failure Detector',
-    desc: '일요일 밤 완벽한 계획, 금요일엔 절반도 못 한 분들. 계획오류 편향이 처음부터 실패를 설계한 겁니다.',
-    tags: ['계획오류', '생산성', '직장인', '시간관리'],
+    desc: '일요일 밤에 완벽한 주간계획을 세우고, 금요일엔 절반도 못 한 분들. 의지력 문제가 아닙니다. 처음부터 실패하도록 설계된 계획입니다.',
+    tags: ['직장인', '주간계획', '생산성', '시간관리'],
     sales: 15, maxSales: 25, price: 4.99, featured: true,
-    features: ['계획오류 패턴 자동 진단', '현실적 주간계획 재설계', '우선순위 재배치 가이드', '내일 당장 실행 가능']
+    features: ['내 계획이 왜 항상 실패하는지 원인 진단', '현실적으로 실행 가능한 주간계획 재설계', '급한 일에 치여 중요한 일을 못 하는 패턴 해소', '내일 당장 실행 가능']
   },
   {
     id: 'pb001', target: 'FND', targetLabel: '창업자',
     title: 'Smarter Startup Plan',
-    desc: '창업 계획서의 인지 편향을 다각도로 진단합니다. 열정은 유지하되, 근거 없는 낙관을 제거하세요.',
-    tags: ['창업', '비즈니스플랜', '편향진단', '복합편향'],
+    desc: '"이 사업 잘 될 것 같은데"라는 느낌, 근거가 있는 건지 확인해보셨나요? 열정은 유지하되, 근거 없는 낙관을 걸러냅니다.',
+    tags: ['창업자', '사업계획', '시장검증', '창업준비'],
     sales: 5, maxSales: 25, price: 4.99, featured: false,
-    features: ['복합 편향 진단 (MIX)', '사업계획 교정 출력', '투자자 관점 체크', '즉시 실전 사용 가능']
+    features: ['사업계획서에 숨어있는 약점 사전 발견', '투자자 관점에서 바라본 위험 요소 진단', '감이 아닌 근거로 만드는 사업 계획', '즉시 실전 사용 가능']
   }
 ];
 
@@ -544,6 +578,17 @@ function openModal(p) {
 function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
 function closeModalBg(e) { if (e.target === document.getElementById('modal-bg')) closeModal(); }
 
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+function showGenerator() {
+  document.getElementById('generator-modal').classList.add('open');
+}
+function closeGeneratorModal(e) {
+  if (e.target === document.getElementById('generator-modal')) {
+    document.getElementById('generator-modal').classList.remove('open');
+  }
+}
 renderCards(prompts);
 </script>
 </body>
